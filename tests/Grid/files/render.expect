@@ -1,9 +1,8 @@
-
 <div id="snippet-grid-grid">
 
 
 
-<form action="/" method="get" id="frm-grid-form" class="ajax grido" data-grido-refresh-handler="/?action=default&amp;do=grid-refresh&amp;presenter=Test">
+<form action="/test/" method="get" id="frm-grid-form" class="ajax grido" data-grido-refresh-handler="/test/?do=grid-refresh">
 
 <table id="grid">
     <thead>
@@ -15,26 +14,30 @@
                         <span>Firstname</span>
                 </th>
                 <th class="column grid-header-surname">
-                        <a class="ajax" href="/?grid-sort%5Bsurname%5D=asc&amp;action=default&amp;do=grid-sort&amp;presenter=Test">Surname</a>
+                        <a class="ajax" href="/test/?grid-sort%5Bsurname%5D=asc&amp;do=grid-sort">Surname</a>
                 </th>
                 <th class="column grid-header-gender">
-                        <a class="ajax" href="/?grid-sort%5Bgender%5D=asc&amp;action=default&amp;do=grid-sort&amp;presenter=Test">Gender</a>
+                        <a class="ajax" href="/test/?grid-sort%5Bgender%5D=asc&amp;do=grid-sort">Gender</a>
                 </th>
                 <th class="column grid-header-birthday">
-                        <a class="ajax" href="/?grid-sort%5Bbirthday%5D=asc&amp;action=default&amp;do=grid-sort&amp;presenter=Test"><i class="icon-birthday"></i></a>
+                        <a class="ajax" href="/test/?grid-sort%5Bbirthday%5D=asc&amp;do=grid-sort"><i class="icon-birthday"></i></a>
                 </th>
                 <th class="actions center">Actions</th>
         </tr>
         <tr class="filter inner">
+
                     <th class="grid-filter-firstname">
                             <input type="text" name="filters[firstname]" class="text" id="frm-grid-form-filters-firstname">
                     </th>
+
                     <th class="grid-filter-surname">
                             <input type="text" name="filters[surname]" class="text" id="frm-grid-form-filters-surname">
                     </th>
+
                     <th class="grid-filter-gender">
                             <input type="text" name="filters[gender]" class="text" id="frm-grid-form-filters-gender">
                     </th>
+
                     <th class="grid-filter-birthday">
                             <input type="text" name="filters[birthday]" class="text date" autocomplete="off" id="frm-grid-form-filters-birthday">
                     </th>
@@ -46,23 +49,27 @@
     <tfoot>
         <tr>
             <td colspan="6">
+                <span class="search">
+                    <input type="submit" name="buttons[search]" value="Search">
+                </span>
                 <span class="operations"  title="Select some row">
                     <select name="operations[operations]" id="frm-grid-form-operations-operations"><option value="">Selected...</option><option value="print">Print</option></select>
                     <input type="submit" name="buttons[operations]" class="hide" value="OK">
                 </span>
                 <span class="paginator">
-                        <span class="disabled " href="/?grid-page=0&amp;action=default&amp;do=grid-page&amp;presenter=Test"><i class=""></i> Previous</span>
+
+                        <span class="disabled " href="/test/?grid-page=0&amp;do=grid-page"><i class=""></i> Previous</span>
                             <span class="disabled ">1</span>
-                            <a class="ajax " href="/?grid-page=2&amp;action=default&amp;do=grid-page&amp;presenter=Test">2</a>
-                            <a class="ajax " href="/?grid-page=3&amp;action=default&amp;do=grid-page&amp;presenter=Test">3</a>
-                            <a class="ajax " href="/?grid-page=4&amp;action=default&amp;do=grid-page&amp;presenter=Test">4</a>
-                        <a class="prompt" data-grido-prompt="Enter page:" data-grido-link="/?grid-page=0&amp;action=default&amp;do=grid-page&amp;presenter=Test">...</a>
-                            <a class="ajax " href="/?grid-page=7&amp;action=default&amp;do=grid-page&amp;presenter=Test">7</a>
-                        <a class="prompt" data-grido-prompt="Enter page:" data-grido-link="/?grid-page=0&amp;action=default&amp;do=grid-page&amp;presenter=Test">...</a>
-                            <a class="ajax " href="/?grid-page=10&amp;action=default&amp;do=grid-page&amp;presenter=Test">10</a>
-                        <a class="prompt" data-grido-prompt="Enter page:" data-grido-link="/?grid-page=0&amp;action=default&amp;do=grid-page&amp;presenter=Test">...</a>
-                            <a class="ajax " href="/?grid-page=13&amp;action=default&amp;do=grid-page&amp;presenter=Test">13</a>
-                        <a class="ajax " href="/?grid-page=2&amp;action=default&amp;do=grid-page&amp;presenter=Test">Next <i class=""></i></a>
+                            <a class="ajax " href="/test/?grid-page=2&amp;do=grid-page">2</a>
+                            <a class="ajax " href="/test/?grid-page=3&amp;do=grid-page">3</a>
+                            <a class="ajax " href="/test/?grid-page=4&amp;do=grid-page">4</a>
+                        <a class="prompt" data-grido-prompt="Enter page:" data-grido-link="/test/?grid-page=0&amp;do=grid-page">...</a>
+                            <a class="ajax " href="/test/?grid-page=7&amp;do=grid-page">7</a>
+                        <a class="prompt" data-grido-prompt="Enter page:" data-grido-link="/test/?grid-page=0&amp;do=grid-page">...</a>
+                            <a class="ajax " href="/test/?grid-page=10&amp;do=grid-page">10</a>
+                        <a class="prompt" data-grido-prompt="Enter page:" data-grido-link="/test/?grid-page=0&amp;do=grid-page">...</a>
+                            <a class="ajax " href="/test/?grid-page=13&amp;do=grid-page">13</a>
+                        <a class="ajax " href="/test/?grid-page=2&amp;do=grid-page">Next <i class=""></i></a>
                 </span>
                 <span class="right">
                     <span class="count">
@@ -71,13 +78,10 @@
                         <input type="submit" name="buttons[perPage]" value="Items per page" class="hide">
                     </span>
                     <span class="export">
-                        <a href="/?action=default&amp;do=grid-export-export&amp;presenter=Test" title="Export all items">Export</a>
+                        <a href="/test/?do=grid-export-export" title="Export all items">Export</a>
                     </span>
                     <span class="reset">
                         <input type="submit" name="buttons[reset]" value="Reset">
-                    </span>
-                    <span class="search">
-                        <input type="submit" name="buttons[search]" value="Search">
                     </span>
                 </span>
             </td>
@@ -101,7 +105,10 @@
                             25.10.1964
                     </td>
                 <td class="actions center">
-<a class="xxx" href="/?id=1&amp;action=edit&amp;presenter=Test">Edit</a><a class="grid-action-delete yyy" href="/?grid-actions-delete-id=1&amp;action=default&amp;do=grid-actions-delete-click&amp;presenter=Test">Delete</a><button href="/?grid-actions-print-id=1&amp;action=default&amp;do=grid-actions-print-click&amp;presenter=Test"></button>                </td>
+
+<a class="xxx" href="/test/edit/1">Edit</a>
+<a class="grid-action-delete yyy" href="/test/?grid-actions-delete-id=1&amp;do=grid-actions-delete-click">Delete</a>
+<button href="/test/?grid-actions-print-id=1&amp;do=grid-actions-print-click"></button>                </td>
             </tr>
             <tr class="grid-row-20 Marij">
                 <td class="checker">
@@ -121,7 +128,10 @@ and newline &quot;test&quot;;
                             16.12.1972
                     </td>
                 <td class="actions center">
-<a class="xxx" href="/?id=20&amp;action=edit&amp;presenter=Test">Edit</a><a class="grid-action-delete yyy" href="/?grid-actions-delete-id=20&amp;action=default&amp;do=grid-actions-delete-click&amp;presenter=Test">Delete</a><button href="/?grid-actions-print-id=20&amp;action=default&amp;do=grid-actions-print-click&amp;presenter=Test"></button>                </td>
+
+<a class="xxx" href="/test/edit/20">Edit</a>
+<a class="grid-action-delete yyy" href="/test/?grid-actions-delete-id=20&amp;do=grid-actions-delete-click">Delete</a>
+<button href="/test/?grid-actions-print-id=20&amp;do=grid-actions-print-click"></button>                </td>
             </tr>
             <tr class="grid-row-39 Lyyli">
                 <td class="checker">
@@ -140,7 +150,10 @@ and newline &quot;test&quot;;
                             05.05.1963
                     </td>
                 <td class="actions center">
-<a class="xxx" href="/?id=39&amp;action=edit&amp;presenter=Test">Edit</a><a class="grid-action-delete yyy" href="/?grid-actions-delete-id=39&amp;action=default&amp;do=grid-actions-delete-click&amp;presenter=Test">Delete</a><button href="/?grid-actions-print-id=39&amp;action=default&amp;do=grid-actions-print-click&amp;presenter=Test"></button>                </td>
+
+<a class="xxx" href="/test/edit/39">Edit</a>
+<a class="grid-action-delete yyy" href="/test/?grid-actions-delete-id=39&amp;do=grid-actions-delete-click">Delete</a>
+<button href="/test/?grid-actions-print-id=39&amp;do=grid-actions-print-click"></button>                </td>
             </tr>
             <tr class="grid-row-58 Dýrleif">
                 <td class="checker">
@@ -159,10 +172,13 @@ and newline &quot;test&quot;;
                             24.11.1972
                     </td>
                 <td class="actions center">
-<a class="xxx" href="/?id=58&amp;action=edit&amp;presenter=Test">Edit</a><a class="grid-action-delete yyy" href="/?grid-actions-delete-id=58&amp;action=default&amp;do=grid-actions-delete-click&amp;presenter=Test">Delete</a><button href="/?grid-actions-print-id=58&amp;action=default&amp;do=grid-actions-print-click&amp;presenter=Test"></button>                </td>
+
+<a class="xxx" href="/test/edit/58">Edit</a>
+<a class="grid-action-delete yyy" href="/test/?grid-actions-delete-id=58&amp;do=grid-actions-delete-click">Delete</a>
+<button href="/test/?grid-actions-print-id=58&amp;do=grid-actions-print-click"></button>                </td>
             </tr>
     </tbody>
 </table>
-<input type="hidden" name="action" value="default"><input type="hidden" name="presenter" value="Test"><input type="hidden" name="do" value="grid-form-submit"></form>
+<input type="hidden" name="do" value="grid-form-submit"></form>
 
 </div>
