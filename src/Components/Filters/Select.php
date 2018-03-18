@@ -36,10 +36,10 @@ class Select extends Filter
     }
 
     /**
-     * @return \Nette\Forms\Controls\SelectBox
+     * @return \Ciki\Forms\Controls\SelectBox
      */
     protected function getFormControl()
     {
-        return new \Nette\Forms\Controls\SelectBox($this->label);
+        return new \Ciki\Forms\Controls\SelectBox($this->label);
     }
 }
