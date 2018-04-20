@@ -21,7 +21,7 @@ use Nette;
  * @subpackage  DataSources
  * @author      Petr Bugyík
  *
- * @property-read \DibiFluent $fluent
+ * @property-read \Dibi\Fluent $fluent
  * @property-read int $limit
  * @property-read int $offset
  * @property-read int $count
@@ -31,7 +31,7 @@ class DibiFluent  implements IDataSource
 {
     use Nette\SmartObject;
 
-    /** @var \DibiFluent */
+    /** @var \Dibi\Fluent */
     protected $fluent;
 
     /** @var int */
@@ -41,15 +41,15 @@ class DibiFluent  implements IDataSource
     protected $offset;
 
     /**
-     * @param \DibiFluent $fluent
+     * @param \Dibi\Fluent $fluent
      */
-    public function __construct(\DibiFluent $fluent)
+    public function __construct(\Dibi\Fluent $fluent)
     {
         $this->fluent = $fluent;
     }
 
     /**
-     * @return \DibiFluent
+     * @return \Dibi\Fluent
      */
     public function getFluent()
     {
@@ -74,9 +74,9 @@ class DibiFluent  implements IDataSource
 
     /**
      * @param \Grido\Components\Filters\Condition $condition
-     * @param \DibiFluent $fluent
+     * @param \Dibi\Fluent $fluent
      */
-    protected function makeWhere(\Grido\Components\Filters\Condition $condition, \DibiFluent $fluent = NULL)
+    protected function makeWhere(\Grido\Components\Filters\Condition $condition, \Dibi\Fluent $fluent = NULL)
     {
         $fluent = $fluent === NULL
             ? $this->fluent
@@ -95,7 +95,7 @@ class DibiFluent  implements IDataSource
      * Default callback used when an editable column has customRender.
      * @param mixed $id
      * @param string $idCol
-     * @return \DibiRow
+     * @return \Dibi\Row
      */
     public function getRow($id, $idCol)
     {
