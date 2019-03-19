@@ -865,32 +865,34 @@ class Grid extends Components\Container
 
         $form = $this['form'];
 
-        $this->getTemplate()->add('data', $data);
-        $this->getTemplate()->add('form', $form);
-        $this->getTemplate()->add('paginator', $this->getPaginator());
-        $this->getTemplate()->add('customization', $this->getCustomization());
-        $this->getTemplate()->add('columns', $this->getComponent(Column::ID)->getComponents());
-        $this->getTemplate()->add('actions', $this->hasActions()
-            ? $this->getComponent(Action::ID)->getComponents()
-            : []
-        );
+		// avoid multiple template params setting if grid used on multiple places or called multiple times in snippets
+		if (!isset($this->getTemplate()->data)) {
+			$this->getTemplate()->add('data', $data);
+			$this->getTemplate()->add('form', $form);
+			$this->getTemplate()->add('paginator', $this->getPaginator());
+			$this->getTemplate()->add('customization', $this->getCustomization());
+			$this->getTemplate()->add('columns', $this->getComponent(Column::ID)->getComponents());
+			$this->getTemplate()->add('actions', $this->hasActions()
+				? $this->getComponent(Action::ID)->getComponents()
+				: []
+			);
 
-        $this->getTemplate()->add('buttons', $this->hasButtons()
-            ? $this->getComponent(Button::ID)->getComponents()
-            : []
-        );
+			$this->getTemplate()->add('buttons', $this->hasButtons()
+				? $this->getComponent(Button::ID)->getComponents()
+				: []
+			);
 
-        $this->getTemplate()->add('formFilters', $this->hasFilters()
-            ? $form->getComponent(Filter::ID)->getComponents()
-            : []
-        );
+			$this->getTemplate()->add('formFilters', $this->hasFilters()
+				? $form->getComponent(Filter::ID)->getComponents()
+				: []
+			);
 
-        $form['count']->setValue($this->getPerPage());
+			$form['count']->setValue($this->getPerPage());
 
-        if ($options = $this->options[self::CLIENT_SIDE_OPTIONS]) {
-            $this->getTablePrototype()->setAttribute('data-' . self::CLIENT_SIDE_OPTIONS, json_encode($options));
-        }
-
+			if ($options = $this->options[self::CLIENT_SIDE_OPTIONS]) {
+				$this->getTablePrototype()->setAttribute('data-' . self::CLIENT_SIDE_OPTIONS, json_encode($options));
+			}
+		}
         $this->getTemplate()->render();
     }
 
