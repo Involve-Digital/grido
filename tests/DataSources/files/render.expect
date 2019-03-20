@@ -69,8 +69,11 @@
                             <select name="count" title="Items per page" id="frm-grid-form-count"><option value="3" selected>3</option><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option></select>
                         <input type="submit" name="buttons[perPage]" value="Items per page" class="hide">
                     </span>
+					<span class="export">
+                        <a class="" href="/?action=default&amp;do=grid-export-csv-export&amp;presenter=Test" title="Export all items"><i class=""> Export</i></a>
+                    </span>
                     <span class="export">
-                        <a href="/test/?do=grid-export-export" title="Export all items">Export</a>
+                        <a class="" href="/?action=default&amp;do=grid-export-csv2-export&amp;presenter=Test" title="Export all items"><i class=""> Export</i></a>
                     </span>
                     <span class="reset">
                         <input type="submit" name="buttons[reset]" value="Reset">

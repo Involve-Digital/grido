@@ -11,6 +11,8 @@
 
 namespace Grido\Components;
 
+use Grido\Components\Exports\BaseExport;
+use Grido\Components\Exports\CsvExport;
 use Grido\Grid;
 use Grido\Helpers;
 use Grido\Components\Actions\Action;
@@ -97,12 +99,37 @@ abstract class Container extends \Nette\Application\UI\Control
 
     /**
      * Returns export component.
+     * @param string $name
      * @param bool $need
-     * @return Export
+     * @return CsvExport
      */
-    public function getExport($need = TRUE)
+    public function getExport($name = NULL, $need = TRUE)
     {
-        return $this->getComponent(Export::ID, $need);
+        if (is_bool($name) || $name === NULL) { // deprecated
+            trigger_error('This usage of ' . __METHOD__ . '() is deprecated,
+            please write name of export to first parameter.', E_USER_DEPRECATED);
+            $export = $this->getComponent(BaseExport::ID, $name);
+            if ($export) {
+                $export = $export->getComponent(CsvExport::CSV_ID, is_bool($name) ? $name : TRUE);
+            }
+            return $export;
+        }
+        return $this->hasExport()
+            ? $this->getComponent(BaseExport::ID)->getComponent(Helpers::formatColumnName($name), $need)
+            : NULL;
+    }
+
+    /**
+     * @param bool $need
+     * @return BaseExport[]
+     */
+    public function getExports($need = TRUE)
+    {
+        $export = $this->getComponent(BaseExport::ID, $need);
+        if ($export) {
+            $export = $export->getComponents();
+        }
+        return $export;
     }
 
     /**
@@ -200,7 +227,7 @@ abstract class Container extends \Nette\Application\UI\Control
         $hasExport = $this->hasExport;
 
         if ($hasExport === NULL || $useCache === FALSE) {
-            $hasExport = (bool) $this->getComponent(Export::ID, FALSE);
+            $hasExport = (bool) $this->getExports(FALSE);
             $this->hasExport = $useCache ? $hasExport : NULL;
         }
 
@@ -393,10 +420,29 @@ abstract class Container extends \Nette\Application\UI\Control
     /**
      * @param string $label of exporting file
      * @return Export
+     *
+     * @deprecated
      */
     public function setExport($label = NULL)
     {
-        return new Export($this, $label);
+        trigger_error(__METHOD__ . '() is deprecated; use addExport instead.', E_USER_DEPRECATED);
+        return $this->addExport(new CsvExport($label), CsvExport::CSV_ID);
+    }
+
+    /**
+     * @param BaseExport $export
+     * @param string $name Component name
+     * @return BaseExport
+     */
+    public function addExport(BaseExport $export, $name)
+    {
+        $container = $this->getComponent(BaseExport::ID, FALSE);
+        if (!$container) {
+            $container = new \Nette\ComponentModel\Container();
+            $this->addComponent($container, BaseExport::ID);
+        }
+        $container->addComponent($export, $name);
+        return $export;
     }
 
 
