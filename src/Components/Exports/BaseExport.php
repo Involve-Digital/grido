@@ -34,12 +34,16 @@ abstract class BaseExport extends Component implements IResponse
     /** @var string */
     private $title;
 
+    /** @var ?string */
+    private $filename;
+
     /**
      * @param string $label
      */
-    public function __construct($label = NULL)
+    public function __construct($label = NULL, $filename = NULL)
     {
         $this->label = $label;
+        $this->filename = $filename;
         $this->monitor('Grido\Grid');
     }
 
@@ -146,7 +150,7 @@ abstract class BaseExport extends Component implements IResponse
             ? ucfirst(Strings::webalize($this->label))
             : ucfirst($this->grid->name);
 
-        $this->setHttpHeaders($httpResponse, $label);
+        $this->setHttpHeaders($httpResponse, $this->filename ?: $label);
 
         print chr(0xEF) . chr(0xBB) . chr(0xBF); //UTF-8 BOM
         $this->printData();

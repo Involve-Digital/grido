@@ -1,0 +1,45 @@
+{**
+ * @param array $header public header names
+ * @param Nette\Utils\ArrayHash $data
+ * @param Nette\Utils\ArrayHash $sums
+ * @param RecursiveComponentIterator $columns
+ *}
+
+{*extends TPL_INC_DIR . '/@styledBareLayout.latte'*}
+
+{*block #body*}
+
+<style>
+	body {
+		font-size:90%;
+	}
+	h2 {
+		font-size:18px;
+	}
+	/* original have line separator specified via unsupported rule, thus we are shrinking padding here */
+	table.table tbody td,
+	table.table thead th {
+		padding: 6px;
+	}
+</style>
+
+
+<table class="table">
+	<thead>
+		<tr>
+			<th n:foreach="$header as $h">{$h}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr n:foreach="$data as $v">
+			<td n:foreach="$v as $v2">{$v2}</td>
+		</tr>
+		<tr n:if="!empty($sums)">
+			<td n:foreach="$columns as $column">
+				{ifset $sums[$column->name]}
+					&sum; {$column->renderSum($sums[$column->name] / 100)}
+				{/ifset}
+			</td>
+		</tr>
+	</tbody>
+</table>
