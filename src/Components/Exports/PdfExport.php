@@ -61,7 +61,7 @@ class PdfExport extends BaseExport
 
 		// optional
 //		$pdf->documentTitle = date("Y-m-d H:i") . " PDF export"; // creates filename
-		$pdf->pageFormat = "A4-L"; // wide format
+		$pdf->pageFormat = $this->options['pageFormat'] ?? count($columns) > 5 ? 'A4-L' : 'A4';
 		$pdf->getMPDF()->setFooter("|© www.kartamesta.sk|");
 //		$pdf->outputDestination = $pdf::OUTPUT_DOWNLOAD;
 //		$pdf->save = $pdf::OUTPUT_DOWNLOAD;

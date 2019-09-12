@@ -37,13 +37,18 @@ abstract class BaseExport extends Component implements IResponse
     /** @var ?string */
     private $filename;
 
+    /** @var array */
+    protected $options;
+
     /**
      * @param string $label
      */
-    public function __construct($label = NULL, $filename = NULL)
+    public function __construct($label = NULL, $filename = NULL, array $options = [])
     {
         $this->label = $label;
         $this->filename = $filename;
+        $this->options = $options;
+
         $this->monitor('Grido\Grid');
     }
 
