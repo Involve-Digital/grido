@@ -20,14 +20,19 @@ namespace Grido\Components\Filters;
  */
 class Select extends Filter
 {
+	/** @var bool */
+	private $multiple = false;
+
     /**
      * @param \Grido\Grid $grid
      * @param string $name
      * @param string $label
      * @param array $items for select
+     * @param bool $multiple
      */
-    public function __construct($grid, $name, $label, array $items = NULL)
+    public function __construct($grid, $name, $label, array $items = NULL, /*bool */$multiple = false)
     {
+		$this->multiple = $multiple;
         parent::__construct($grid, $name, $label);
 
         if ($items !== NULL) {
@@ -40,6 +45,6 @@ class Select extends Filter
      */
     protected function getFormControl()
     {
-        return new \Ciki\Forms\Controls\SelectBox($this->label);
+        return $this->multiple ? new \Ciki\Forms\Controls\MultiSelectBox($this->label) : new \Ciki\Forms\Controls\SelectBox($this->label);
     }
 }

@@ -399,11 +399,12 @@ abstract class Column extends \Grido\Components\Component
 
     /**
      * @param array $items
+     * @param bool $multiple
      * @return \Grido\Components\Filters\Select
      */
-    public function setFilterSelect(array $items = NULL)
+    public function setFilterSelect(array $items = NULL, /*bool*/ $multiple = false)
     {
-        return $this->grid->addFilterSelect($this->getName(), $this->label, $items);
+        return $this->grid->addFilterSelect($this->getName(), $this->label, $items, $multiple);
     }
 
     /**

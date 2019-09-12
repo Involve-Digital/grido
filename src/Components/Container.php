@@ -353,11 +353,12 @@ abstract class Container extends \Nette\Application\UI\Control
      * @param string $name
      * @param string $label
      * @param array $items
+     * @param bool $multiple
      * @return Filters\Select
      */
-    public function addFilterSelect($name, $label, array $items = NULL)
+    public function addFilterSelect($name, $label, array $items = NULL, /*bool*/ $multiple = false)
     {
-        return new Filters\Select($this, $name, $label, $items);
+        return new Filters\Select($this, $name, $label, $items, $multiple);
     }
 
     /**
