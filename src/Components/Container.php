@@ -48,82 +48,59 @@ abstract class Container extends \Nette\Application\UI\Control
     /** @var bool */
     protected $hasButtons;
 
-    /**
-     * Returns column component.
-     * @param string $name
-     * @param bool $need
-     * @return Editable
-     */
-    public function getColumn($name, $need = TRUE)
+
+    public function getColumn(string $name, bool $need = true): ?Column
     {
         return $this->hasColumns()
             ? $this->getComponent(Column::ID)->getComponent(Helpers::formatColumnName($name), $need)
-            : NULL;
+            : null;
     }
 
-    /**
-     * Returns filter component.
-     * @param string $name
-     * @param bool $need
-     * @return Filter
-     */
-    public function getFilter($name, $need = TRUE)
+
+    public function getFilter(string $name, bool $need = true): ?Filter
     {
         return $this->hasFilters()
             ? $this->getComponent(Filter::ID)->getComponent(Helpers::formatColumnName($name), $need)
-            : NULL;
+            : null;
     }
 
-    /**
-     * Returns action component.
-     * @param string $name
-     * @param bool $need
-     * @return Action
-     */
-    public function getAction($name, $need = TRUE)
+
+    public function getAction(string $name, bool $need = true): ?Action
     {
         return $this->hasActions()
             ? $this->getComponent(Action::ID)->getComponent($name, $need)
-            : NULL;
+            : null;
     }
 
-    /**
-     * Returns operations component.
-     * @param bool $need
-     * @return Operation
-     */
-    public function getOperation($need = TRUE)
+
+	public function getOperation(bool $need = true): ?Operation
     {
         return $this->getComponent(Operation::ID, $need);
     }
 
-    /**
-     * Returns export component.
-     * @param string $name
-     * @param bool $need
-     * @return CsvExport
-     */
-    public function getExport($name = NULL, $need = TRUE)
+
+    public function getExport(string $name = null, bool $need = true): ?BaseExport
     {
-        if (is_bool($name) || $name === NULL) { // deprecated
+        if (is_bool($name) || $name === null) { // deprecated
             trigger_error('This usage of ' . __METHOD__ . '() is deprecated,
             please write name of export to first parameter.', E_USER_DEPRECATED);
             $export = $this->getComponent(BaseExport::ID, $name);
             if ($export) {
-                $export = $export->getComponent(CsvExport::CSV_ID, is_bool($name) ? $name : TRUE);
+                $export = $export->getComponent(CsvExport::CSV_ID, is_bool($name) ? $name : true);
             }
             return $export;
         }
         return $this->hasExport()
             ? $this->getComponent(BaseExport::ID)->getComponent(Helpers::formatColumnName($name), $need)
-            : NULL;
+            : null;
     }
+
 
     /**
      * @param bool $need
-     * @return BaseExport[]
+     * @return ?BaseExport[]
      */
-    public function getExports($need = TRUE)
+    public function getExports(bool $need = true): ?array
     {
         $export = $this->getComponent(BaseExport::ID, $need);
         if ($export) {
@@ -132,312 +109,224 @@ abstract class Container extends \Nette\Application\UI\Control
         return $export;
     }
 
-    /**
-     * Returns toolbar button component.
-     * @param bool $need
-     * @return Button
-     */
-    public function getButton($name, $need = TRUE)
+
+    public function getButton(string $name, bool $need = true): Button
     {
         return $this->hasButtons()
             ? $this->getComponent(Button::ID)->getComponent($name, $need)
-            : NULL;
+            : null;
     }
 
     /**********************************************************************************************/
 
     /**
-     * @param bool $useCache
-     * @return bool
      * @internal
      */
-    public function hasColumns($useCache = TRUE)
+    public function hasColumns(bool $useCache = true): bool
     {
         $hasColumns = $this->hasColumns;
 
-        if ($hasColumns === NULL || $useCache === FALSE) {
-            $container = $this->getComponent(Column::ID, FALSE);
+        if ($hasColumns === null || $useCache === false) {
+            $container = $this->getComponent(Column::ID, false);
             $hasColumns = $container && count($container->getComponents()) > 0;
-            $this->hasColumns = $useCache ? $hasColumns : NULL;
+            $this->hasColumns = $useCache ? $hasColumns : null;
         }
 
         return $hasColumns;
     }
 
+
     /**
-     * @param bool $useCache
-     * @return bool
      * @internal
      */
-    public function hasFilters($useCache = TRUE)
+    public function hasFilters(bool $useCache = true): bool
     {
         $hasFilters = $this->hasFilters;
 
-        if ($hasFilters === NULL || $useCache === FALSE) {
-            $container = $this->getComponent(Filter::ID, FALSE);
+        if ($hasFilters === null || $useCache === false) {
+            $container = $this->getComponent(Filter::ID, false);
             $hasFilters = $container && count($container->getComponents()) > 0;
-            $this->hasFilters = $useCache ? $hasFilters : NULL;
+            $this->hasFilters = $useCache ? $hasFilters : null;
         }
 
         return $hasFilters;
     }
 
+
     /**
-     * @param bool $useCache
-     * @return bool
      * @internal
      */
-    public function hasActions($useCache = TRUE)
+    public function hasActions(bool $useCache = true): bool
     {
         $hasActions = $this->hasActions;
 
-        if ($hasActions === NULL || $useCache === FALSE) {
-            $container = $this->getComponent(Action::ID, FALSE);
+        if ($hasActions === null || $useCache === false) {
+            $container = $this->getComponent(Action::ID, false);
             $hasActions = $container && count($container->getComponents()) > 0;
-            $this->hasActions = $useCache ? $hasActions : NULL;
+            $this->hasActions = $useCache ? $hasActions : null;
         }
 
         return $hasActions;
     }
 
+
     /**
-     * @param bool $useCache
-     * @return bool
      * @internal
      */
-    public function hasOperation($useCache = TRUE)
+    public function hasOperation(bool $useCache = true): bool
     {
         $hasOperation = $this->hasOperation;
 
-        if ($hasOperation === NULL || $useCache === FALSE) {
-            $hasOperation = (bool) $this->getComponent(Operation::ID, FALSE);
-            $this->hasOperation = $useCache ? $hasOperation : NULL;
+        if ($hasOperation === null || $useCache === false) {
+            $hasOperation = (bool) $this->getComponent(Operation::ID, false);
+            $this->hasOperation = $useCache ? $hasOperation : null;
         }
 
         return $hasOperation;
     }
 
+
     /**
-     * @param bool $useCache
-     * @return bool
      * @internal
      */
-    public function hasExport($useCache = TRUE)
+    public function hasExport(bool $useCache = true): bool
     {
         $hasExport = $this->hasExport;
 
-        if ($hasExport === NULL || $useCache === FALSE) {
-            $hasExport = (bool) $this->getExports(FALSE);
-            $this->hasExport = $useCache ? $hasExport : NULL;
+        if ($hasExport === null || $useCache === false) {
+            $hasExport = (bool) $this->getExports(false);
+            $this->hasExport = $useCache ? $hasExport : null;
         }
 
         return $hasExport;
     }
 
     /**
-     * @param bool $useCache
-     * @return bool
      * @internal
      */
-    public function hasButtons($useCache = TRUE)
+    public function hasButtons(bool $useCache = true): bool
     {
         $hasButtons = $this->hasButtons;
 
-        if ($hasButtons === NULL || $useCache === FALSE) {
-            $hasButtons = (bool) $this->getComponent(Button::ID, FALSE);
-            $this->hasButtons = $useCache ? $hasButtons : NULL;
+        if ($hasButtons === null || $useCache === false) {
+            $hasButtons = (bool) $this->getComponent(Button::ID, false);
+            $this->hasButtons = $useCache ? $hasButtons : null;
         }
 
         return $hasButtons;
     }
 
+
     /**********************************************************************************************/
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @return Columns\Text
-     */
-    public function addColumnText($name, $label)
+
+    public function addColumnText(string $name, string $label): Columns\Text
     {
         return new Columns\Text($this, $name, $label);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @return Columns\Email
-     */
-    public function addColumnEmail($name, $label)
+
+    public function addColumnEmail(string $name, string $label): Columns\Email
     {
         return new Columns\Email($this, $name, $label);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @return Columns\Link
-     */
-    public function addColumnLink($name, $label)
+
+	public function addColumnLink(string $name, string $label): Columns\Link
     {
         return new Columns\Link($this, $name, $label);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @param string $dateFormat
-     * @return Columns\Date
-     */
-    public function addColumnDate($name, $label, $dateFormat = NULL)
+
+	public function addColumnDate(string $name, string $label, string $dateFormat = null): Columns\Date
     {
         return new Columns\Date($this, $name, $label, $dateFormat);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @param int $decimals number of decimal points
-     * @param string $decPoint separator for the decimal point
-     * @param string $thousandsSep thousands separator
-     * @return Columns\Number
-     */
-    public function addColumnNumber($name, $label, $decimals = NULL, $decPoint = NULL, $thousandsSep = NULL)
+
+    public function addColumnNumber(string $name, string $label, int $decimals = null, string $decPoint = null, string $thousandsSep = null): Columns\Number
     {
         return new Columns\Number($this, $name, $label, $decimals, $decPoint, $thousandsSep);
     }
 
     /**********************************************************************************************/
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @return Filters\Text
-     */
-    public function addFilterText($name, $label)
+
+	public function addFilterText(string $name, string $label): Filters\Text
     {
         return new Filters\Text($this, $name, $label);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @return Filters\Date
-     */
-    public function addFilterDate($name, $label)
+
+    public function addFilterDate(string $name, string $label): Filters\Date
     {
         return new Filters\Date($this, $name, $label);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @return Filters\DateRange
-     */
-    public function addFilterDateRange($name, $label)
+
+	public function addFilterDateRange(string $name, string $label): Filters\DateRange
     {
         return new Filters\DateRange($this, $name, $label);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @return Filters\Check
-     */
-    public function addFilterCheck($name, $label)
+
+    public function addFilterCheck(string $name, string $label): Filters\Check
     {
         return new Filters\Check($this, $name, $label);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @param array $items
-     * @param bool $multiple
-     * @return Filters\Select
-     */
-    public function addFilterSelect($name, $label, array $items = NULL, /*bool*/ $multiple = false)
+
+	public function addFilterSelect(string $name, string $label, array $items = null, bool $multiple = false): Filters\Select
     {
         return new Filters\Select($this, $name, $label, $items, $multiple);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @return Filters\Number
-     */
-    public function addFilterNumber($name, $label)
+
+	public function addFilterNumber(string $name, string $label): Filters\Number
     {
         return new Filters\Number($this, $name, $label);
     }
 
-    /**
-     * @param string $name
-     * @param \Nette\Forms\IControl $formControl
-     * @return Filters\Custom
-     */
-    public function addFilterCustom($name, \Nette\Forms\IControl $formControl)
+
+    public function addFilterCustom(string $name, \Nette\Forms\IControl $formControl): Filters\Custom
     {
-        return new Filters\Custom($this, $name, NULL, $formControl);
+        return new Filters\Custom($this, $name, null, $formControl);
     }
 
     /**********************************************************************************************/
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @param string $destination
-     * @param array $arguments
-     * @return Actions\Href
-     */
-    public function addActionHref($name, $label, $destination = NULL, array $arguments = [])
+    public function addActionHref(string $name, string $label, string $destination = null, array $arguments = []): Actions\Href
     {
         return new Actions\Href($this, $name, $label, $destination, $arguments);
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @param callback $onClick
-     * @return Actions\Event
-     */
-    public function addActionEvent($name, $label, $onClick = NULL)
+
+    public function addActionEvent(string $name, string $label, callable $onClick = null): Actions\Event
     {
         return new Actions\Event($this, $name, $label, $onClick);
     }
 
     /**********************************************************************************************/
 
-    /**
-     * @param array $operations
-     * @param callback $onSubmit - callback after operation submit
-     * @return Operation
-     */
-    public function setOperation(array $operations, $onSubmit)
+    public function setOperation(array $operations, callable $onSubmit): Operation
     {
         return new Operation($this, $operations, $onSubmit);
     }
 
+
     /**
-     * @param string $label of exporting file
-     * @return Export
-     *
      * @deprecated
      */
-    public function setExport($label = NULL)
+    public function setExport(string $label = null): CsvExport
     {
         trigger_error(__METHOD__ . '() is deprecated; use addExport instead.', E_USER_DEPRECATED);
         return $this->addExport(new CsvExport($label), CsvExport::CSV_ID);
     }
 
-    /**
-     * @param BaseExport $export
-     * @param string $name Component name
-     * @return BaseExport
-     */
-    public function addExport(BaseExport $export, $name)
+
+	public function addExport(BaseExport $export, string $name): BaseExport
     {
-        $container = $this->getComponent(BaseExport::ID, FALSE);
+        $container = $this->getComponent(BaseExport::ID, false);
         if (!$container) {
             $container = new \Nette\ComponentModel\Container();
             $this->addComponent($container, BaseExport::ID);
@@ -454,7 +343,7 @@ abstract class Container extends \Nette\Application\UI\Control
      * @param array $arguments - second param for method $presenter->link()
      * @return Button
      */
-    public function addButton($name, $label = NULL, $destination = NULL, array $arguments = [])
+    public function addButton(string $name, string $label = null, string $destination = null, array $arguments = []): Button
     {
         return new Button($this, $name, $label, $destination, $arguments);
     }
@@ -465,7 +354,7 @@ abstract class Container extends \Nette\Application\UI\Control
      * @param callback $callback function($id, $newValue, $oldValue, Editable $column) {}
      * @return Grid
      */
-    public function setEditableColumns($callback = NULL)
+    public function setEditableColumns(callable $callback = null)
     {
         $this->onRender[] = function(Grid $grid) use ($callback) {
             if (!$grid->hasColumns()) {

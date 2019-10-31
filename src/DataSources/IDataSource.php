@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Grido (http://grido.bugyik.cz)
  *
@@ -20,40 +19,22 @@ namespace Grido\DataSources;
  */
 interface IDataSource
 {
-    /**
-     * @return int
-     */
-    public function getCount();
 
-    /**
-     * @return array
-     */
-    public function getData();
+	public function getCount(): int;
 
-    /**
-     * @param array $condition
-     * @return void
-     */
-    public function filter(array $condition);
+	public function getData(): array;
 
-    /**
-     * @param int $offset
-     * @param int $limit
-     * @return void
-     */
-    public function limit($offset, $limit);
+	public function filter(array $condition): void;
 
-    /**
-     * @param array $sorting
-     * @return void
-     */
-    public function sort(array $sorting);
+	public function limit(int $offset, int $limit): void;
 
-    /**
-     * @param mixed $column
-     * @param array $conditions
-     * @param int $limit
-     * @return array
-     */
-    public function suggest($column, array $conditions, $limit);
+	public function sort(array $sorting): void;
+
+	/**
+	 * @param mixed $column
+	 * @param array $conditions
+	 * @param int $limit
+	 * @return array
+	 */
+	public function suggest($column, array $conditions, int $limit): array;
 }

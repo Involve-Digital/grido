@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Grido (http://grido.bugyik.cz)
  *
@@ -10,6 +9,8 @@
  */
 
 namespace Grido\Components;
+
+use Grido\Grid;
 
 /**
  * Paginating grid.
@@ -22,125 +23,109 @@ namespace Grido\Components;
  * @property-read array $steps
  * @property-read int $countEnd
  * @property-read int $countBegin
- * @property-write \Grido\Grid $grid
+ * @property-write Grid $grid
  */
 class Paginator extends \Nette\Utils\Paginator
 {
-    const DEFAULT_STEP_COUNT = 4;
-    const DEFAULT_STEP_RANGE = 3;
+	const DEFAULT_STEP_COUNT = 4;
+	const DEFAULT_STEP_RANGE = 3;
 
-    /** @var int */
-    protected $page;
 
-    /** @var array */
-    protected $steps = [];
+	/** @var int */
+	protected $page;
 
-    /** @var int */
-    protected $countBegin;
+	/** @var array */
+	protected $steps = [];
 
-    /** @var int */
-    protected $countEnd;
+	/** @var int */
+	protected $countBegin;
 
-    /** @var \Grido\Grid */
-    protected $grid;
+	/** @var int */
+	protected $countEnd;
 
-    /** @var int */
-    private $stepCount = self::DEFAULT_STEP_COUNT;
+	/** @var Grid */
+	protected $grid;
 
-    /** @var int */
-    private $stepRange = self::DEFAULT_STEP_RANGE;
+	/** @var int */
+	private $stepCount = self::DEFAULT_STEP_COUNT;
 
-    /**
-     * @param \Grido\Grid $grid
-     * @return Paginator
-     */
-    public function setGrid(\Grido\Grid $grid)
-    {
-        $this->grid = $grid;
-        return $this;
-    }
+	/** @var int */
+	private $stepRange = self::DEFAULT_STEP_RANGE;
 
-    /**
-     * @param int $stepRange
-     * @return Paginator
-     */
-    public function setStepRange($stepRange)
-    {
-        $this->stepRange = $stepRange;
-        return $this;
-    }
 
-    /**
-     * @param int $stepCount
-     * @return Paginator
-     */
-    public function setStepCount($stepCount)
-    {
-        $this->stepCount = (int) $stepCount;
-        return $this;
-    }
+	public function setGrid(Grid $grid): Paginator
+	{
+		$this->grid = $grid;
+		return $this;
+	}
 
-    /**********************************************************************************************/
 
-    /**
-     * @return int
-     */
-    public function getPage()
-    {
-        if ($this->page === NULL) {
-            $this->page = parent::getPage();
-        }
+	public function setStepRange(int $stepRange): Paginator
+	{
+		$this->stepRange = $stepRange;
+		return $this;
+	}
 
-        return $this->page;
-    }
 
-    /**
-     * @return array
-     */
-    public function getSteps()
-    {
-        if (empty($this->steps)) {
-            $arr = range(
-                max($this->getFirstPage(), $this->getPage() - $this->stepRange),
-                min($this->getLastPage(), $this->getPage() + $this->stepRange)
-            );
+	public function setStepCount(int $stepCount): Paginator
+	{
+		$this->stepCount = (int) $stepCount;
+		return $this;
+	}
 
-            $quotient = ($this->getPageCount() - 1) / $this->stepCount;
 
-            for ($i = 0; $i <= $this->stepCount; $i++) {
-                $arr[] = (int) (round($quotient * $i) + $this->getFirstPage());
-            }
+	/*	 * ******************************************************************************************* */
 
-            sort($arr);
-            $this->steps = array_values(array_unique($arr));
-        }
+	public function getPage(): int
+	{
+		if ($this->page === null) {
+			$this->page = parent::getPage();
+		}
 
-        return $this->steps;
-    }
+		return $this->page;
+	}
 
-    /**
-     * @return int
-     */
-    public function getCountBegin()
-    {
-        if ($this->countBegin === NULL) {
-            $this->countBegin = $this->grid->getCount() > 0 ? $this->getOffset() + 1 : 0;
-        }
 
-        return $this->countBegin;
-    }
+	public function getSteps(): array
+	{
+		if (empty($this->steps)) {
+			$arr = range(
+				max($this->getFirstPage(), $this->getPage() - $this->stepRange),
+				min($this->getLastPage(), $this->getPage() + $this->stepRange)
+			);
 
-    /**
-     * @return int
-     */
-    public function getCountEnd()
-    {
-        if ($this->countEnd === NULL) {
-            $this->countEnd = $this->grid->getCount() > 0
-                ? min($this->grid->getCount(), $this->getPage() * $this->grid->getPerPage())
-                : 0;
-        }
+			$quotient = ($this->getPageCount() - 1) / $this->stepCount;
 
-        return $this->countEnd;
-    }
+			for ($i = 0; $i <= $this->stepCount; $i++) {
+				$arr[] = (int) (round($quotient * $i) + $this->getFirstPage());
+			}
+
+			sort($arr);
+			$this->steps = array_values(array_unique($arr));
+		}
+
+		return $this->steps;
+	}
+
+
+	public function getCountBegin(): int
+	{
+		if ($this->countBegin === null) {
+			$this->countBegin = $this->grid->getCount() > 0 ? $this->getOffset() + 1 : 0;
+		}
+
+		return $this->countBegin;
+	}
+
+
+	public function getCountEnd(): int
+	{
+		if ($this->countEnd === null) {
+			$this->countEnd = $this->grid->getCount() > 0 ? min($this->grid->getCount(), $this->getPage() * $this->grid->getPerPage()) : 0;
+		}
+
+		return $this->countEnd;
+	}
+
+
 }

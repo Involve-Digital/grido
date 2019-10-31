@@ -8,10 +8,7 @@ use Nette\Http\IResponse;
 class PdfExport extends BaseExport
 {
 
-	/**
-	 * @return void
-	 */
-	protected function printData()
+	protected function printData(): void
 	{
 		$columns = $this->grid[Column::ID]->getComponents();
 		$header = [];
@@ -20,7 +17,7 @@ class PdfExport extends BaseExport
 			$header[] = $this->header ? $column : $column->getLabel();
 		}
 
-		$datasource = $this->grid->getData(FALSE, FALSE, FALSE);
+		$datasource = $this->grid->getData(false, false, false);
 		$iterations = ceil($datasource->getCount() / $this->fetchLimit);
 		$formattedData = [];
 		$sums = [];
@@ -69,11 +66,7 @@ class PdfExport extends BaseExport
 	}
 
 
-	/**
-	 * @param IResponse $httpResponse
-	 * @param string $label
-	 */
-	protected function setHttpHeaders(IResponse $httpResponse, $label)
+	protected function setHttpHeaders(IResponse $httpResponse, string $label): void
 	{
 		$encoding = 'utf-8';
 		$httpResponse->setHeader('Content-Description', 'File Transfer');

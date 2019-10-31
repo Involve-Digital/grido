@@ -56,10 +56,7 @@ class Model
         $this->dataSource = $dataSource;
     }
 
-    /**
-     * @return \IDataSource
-     */
-    public function getDataSource()
+    public function getDataSource(): IDataSource
     {
         return $this->dataSource;
     }

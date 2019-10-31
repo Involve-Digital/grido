@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Grido (http://grido.bugyik.cz)
  *
@@ -13,7 +12,6 @@ namespace Grido\DataSources;
 
 use Grido\Exception;
 use Grido\Components\Filters\Condition;
-
 use Nette\Utils\Strings;
 use Nette\Utils\Random;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -35,266 +33,226 @@ use Nette;
  */
 class Doctrine implements IDataSource
 {
-    use Nette\SmartObject;
 
-    /** @var \Doctrine\ORM\QueryBuilder */
-    protected $qb;
+	use Nette\SmartObject;
+	/** @var \Doctrine\ORM\QueryBuilder */
+	protected $qb;
 
-    /** @var array Map column to the query builder */
-    protected $filterMapping;
+	/** @var array Map column to the query builder */
+	protected $filterMapping;
 
-    /** @var array Map column to the query builder */
-    protected $sortMapping;
+	/** @var array Map column to the query builder */
+	protected $sortMapping;
 
-    /** @var bool use OutputWalker in Doctrine Paginator */
-    protected $useOutputWalkers;
+	/** @var bool use OutputWalker in Doctrine Paginator */
+	protected $useOutputWalkers;
 
-    /** @var bool fetch join collection in Doctrine Paginator */
-    protected $fetchJoinCollection = TRUE;
+	/** @var bool fetch join collection in Doctrine Paginator */
+	protected $fetchJoinCollection = true;
 
-    /** @var array */
-    protected $rand;
+	/** @var array */
+	protected $rand;
 
-    /**
-     * If $sortMapping is not set and $filterMapping is set,
-     * $filterMapping will be used also as $sortMapping.
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @param array $filterMapping Maps columns to the DQL columns
-     * @param array $sortMapping Maps columns to the DQL columns
-     */
-    public function __construct(\Doctrine\ORM\QueryBuilder $qb, array $filterMapping = NULL, array $sortMapping = NULL)
-    {
-        $this->qb = $qb;
-        $this->filterMapping = $filterMapping;
-        $this->sortMapping = $sortMapping;
 
-        if (!$this->sortMapping && $this->filterMapping) {
-            $this->sortMapping = $this->filterMapping;
-        }
-    }
+	/**
+	 * If $sortMapping is not set and $filterMapping is set,
+	 * $filterMapping will be used also as $sortMapping.
+	 * @param \Doctrine\ORM\QueryBuilder $qb
+	 * @param array $filterMapping Maps columns to the DQL columns
+	 * @param array $sortMapping Maps columns to the DQL columns
+	 */
+	public function __construct(\Doctrine\ORM\QueryBuilder $qb, array $filterMapping = null, array $sortMapping = null)
+	{
+		$this->qb = $qb;
+		$this->filterMapping = $filterMapping;
+		$this->sortMapping = $sortMapping;
 
-    /**
-     * @param bool $useOutputWalkers
-     * @return \Grido\DataSources\Doctrine
-     */
-    public function setUseOutputWalkers($useOutputWalkers)
-    {
-        $this->useOutputWalkers = $useOutputWalkers;
-        return $this;
-    }
+		if (!$this->sortMapping && $this->filterMapping) {
+			$this->sortMapping = $this->filterMapping;
+		}
+	}
 
-    /**
-     * @param bool $fetchJoinCollection
-     * @return \Grido\DataSources\Doctrine
-     */
-    public function setFetchJoinCollection($fetchJoinCollection)
-    {
-        $this->fetchJoinCollection = $fetchJoinCollection;
-        return $this;
-    }
 
-    /**
-     * @return \Doctrine\ORM\Query
-     */
-    public function getQuery()
-    {
-        return $this->qb->getQuery();
-    }
+	public function setUseOutputWalkers(bool $useOutputWalkers): \Grido\DataSources\Doctrine
+	{
+		$this->useOutputWalkers = $useOutputWalkers;
+		return $this;
+	}
 
-    /**
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function getQb()
-    {
-        return $this->qb;
-    }
 
-    /**
-     * @return array|NULL
-     */
-    public function getFilterMapping()
-    {
-        return $this->filterMapping;
-    }
+	public function setFetchJoinCollection(bool $fetchJoinCollection): \Grido\DataSources\Doctrine
+	{
+		$this->fetchJoinCollection = $fetchJoinCollection;
+		return $this;
+	}
 
-    /**
-     * @return array|NULL
-     */
-    public function getSortMapping()
-    {
-        return $this->sortMapping;
-    }
 
-    /**
-     * @param Condition $condition
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     */
-    protected function makeWhere(Condition $condition, \Doctrine\ORM\QueryBuilder $qb = NULL)
-    {
-        $qb = $qb === NULL
-            ? $this->qb
-            : $qb;
+	public function getQuery(): \Doctrine\ORM\Query
+	{
+		return $this->qb->getQuery();
+	}
 
-        if ($condition->callback) {
-            return call_user_func_array($condition->callback, [$condition->value, $qb]);
-        }
 
-        $columns = $condition->column;
-        foreach ($columns as $key => $column) {
-            if (!Condition::isOperator($column)) {
-                $columns[$key] = (isset($this->filterMapping[$column])
-                    ? $this->filterMapping[$column]
-                    : (Strings::contains($column, ".")
-                        ? $column
-                        : current($this->qb->getRootAliases()) . '.' . $column));
-            }
-        }
+	public function getQb(): \Doctrine\ORM\QueryBuilder
+	{
+		return $this->qb;
+	}
 
-        $condition->setColumn($columns);
-        list($where) = $condition->__toArray(NULL, NULL, FALSE);
 
-        $rand = $this->getRand();
-        $where = preg_replace_callback('/\?/', function() use ($rand) {
-            static $i = -1;
-            $i++;
-            return ":$rand{$i}";
-        }, $where);
+	public function getFilterMapping(): ?array
+	{
+		return $this->filterMapping;
+	}
 
-        $qb->andWhere($where);
 
-        foreach ($condition->getValueForColumn() as $i => $val) {
-            $qb->setParameter("$rand{$i}", $val);
-        }
-    }
+	public function getSortMapping(): ?array
+	{
+		return $this->sortMapping;
+	}
 
-    /**
-     * @return string
-     */
-    protected function getRand()
-    {
-        do {
-            $rand = Random::generate(4, 'a-z');
-        } while (isset($this->rand[$rand]));
 
-        $this->rand[$rand] = $rand;
-        return $rand;
-    }
+	protected function makeWhere(Condition $condition, \Doctrine\ORM\QueryBuilder $qb = null)
+	{
+		$qb = $qb === null ? $this->qb : $qb;
 
-    /*********************************** interface IDataSource ************************************/
+		if ($condition->callback) {
+			return call_user_func_array($condition->callback, [$condition->value, $qb]);
+		}
 
-    /**
-     * @return int
-     */
-    public function getCount()
-    {
-        $paginator = new Paginator($this->getQuery(), $this->fetchJoinCollection);
-        $paginator->setUseOutputWalkers($this->useOutputWalkers);
+		$columns = $condition->column;
+		foreach ($columns as $key => $column) {
+			if (!Condition::isOperator($column)) {
+				$columns[$key] = (isset($this->filterMapping[$column]) ? $this->filterMapping[$column] : (Strings::contains($column, ".") ? $column : current($this->qb->getRootAliases()) . '.' . $column));
+			}
+		}
 
-        return $paginator->count();
-    }
+		$condition->setColumn($columns);
+		list($where) = $condition->__toArray(null, null, false);
 
-    /**
-     * It is possible to use query builder with additional columns.
-     * In this case, only item at index [0] is returned, because
-     * it should be an entity object.
-     * @return array
-     */
-    public function getData()
-    {
-        $data = [];
+		$rand = $this->getRand();
+		$where = preg_replace_callback('/\?/', function() use ($rand) {
+			static $i = -1;
+			$i++;
+			return ":$rand{$i}";
+		}, $where);
 
-        // Paginator is better if the query uses ManyToMany associations
-        $result = $this->qb->getMaxResults() !== NULL || $this->qb->getFirstResult() !== NULL
-            ? new Paginator($this->getQuery())
-            : $this->qb->getQuery()->getResult();
+		$qb->andWhere($where);
 
-        foreach ($result as $item) {
-            // Return only entity itself
-            $data[] = is_array($item)
-                ? $item[0]
-                : $item;
-        }
+		foreach ($condition->getValueForColumn() as $i => $val) {
+			$qb->setParameter("$rand{$i}", $val);
+		}
+	}
 
-        return $data;
-    }
 
-    /**
-     * Sets filter.
-     * @param array $conditions
-     */
-    public function filter(array $conditions)
-    {
-        foreach ($conditions as $condition) {
-            $this->makeWhere($condition);
-        }
-    }
+	protected function getRand(): string
+	{
+		do {
+			$rand = Random::generate(4, 'a-z');
+		} while (isset($this->rand[$rand]));
 
-    /**
-     * Sets offset and limit.
-     * @param int $offset
-     * @param int $limit
-     */
-    public function limit($offset, $limit)
-    {
-        $this->qb->setFirstResult($offset)
-            ->setMaxResults($limit);
-    }
+		$this->rand[$rand] = $rand;
+		return $rand;
+	}
 
-    /**
-     * Sets sorting.
-     * @param array $sorting
-     */
-    public function sort(array $sorting)
-    {
-        foreach ($sorting as $key => $value) {
-            $column = isset($this->sortMapping[$key])
-                ? $this->sortMapping[$key]
-                : current($this->qb->getRootAliases()) . '.' . $key;
 
-            $this->qb->addOrderBy($column, $value);
-        }
-    }
+	/*	 * ********************************* interface IDataSource *********************************** */
 
-    /**
-     * @param mixed $column
-     * @param array $conditions
-     * @param int $limit
-     * @return array
-     * @throws Exception
-     */
-    public function suggest($column, array $conditions, $limit)
-    {
-        $qb = clone $this->qb;
-        $qb->setMaxResults($limit);
+	public function getCount(): int
+	{
+		$paginator = new Paginator($this->getQuery(), $this->fetchJoinCollection);
+		$paginator->setUseOutputWalkers($this->useOutputWalkers);
 
-        if (is_string($column)) {
-            $mapping = isset($this->filterMapping[$column])
-                ? $this->filterMapping[$column]
-                : current($qb->getRootAliases()) . '.' . $column;
+		return $paginator->count();
+	}
 
-            $qb->select($mapping)->distinct()->orderBy($mapping);
-        }
 
-        foreach ($conditions as $condition) {
-            $this->makeWhere($condition, $qb);
-        }
+	/**
+	 * It is possible to use query builder with additional columns.
+	 * In this case, only item at index [0] is returned, because
+	 * it should be an entity object.
+	 * @return array
+	 */
+	public function getData(): array
+	{
+		$data = [];
 
-        $items = [];
-        $data = $qb->getQuery()->getScalarResult();
-        foreach ($data as $row) {
-            if (is_string($column)) {
-                $value = (string) current($row);
-            } elseif (is_callable($column)) {
-                $value = (string) $column($row);
-            } else {
-                $type = gettype($column);
-                throw new Exception("Column of suggestion must be string or callback, $type given.");
-            }
+		// Paginator is better if the query uses ManyToMany associations
+		$result = $this->qb->getMaxResults() !== null || $this->qb->getFirstResult() !== null ? new Paginator($this->getQuery()) : $this->qb->getQuery()->getResult();
 
-            $items[$value] = \Latte\Runtime\Filters::escapeHtml($value);
-        }
+		foreach ($result as $item) {
+			// Return only entity itself
+			$data[] = is_array($item) ? $item[0] : $item;
+		}
 
-        is_callable($column) && sort($items);
-        return array_values($items);
-    }
+		return $data;
+	}
+
+
+	public function filter(array $conditions): void
+	{
+		foreach ($conditions as $condition) {
+			$this->makeWhere($condition);
+		}
+	}
+
+
+	public function limit(int $offset, int $limit): void
+	{
+		$this->qb->setFirstResult($offset)
+			->setMaxResults($limit);
+	}
+
+
+	public function sort(array $sorting): void
+	{
+		foreach ($sorting as $key => $value) {
+			$column = isset($this->sortMapping[$key]) ? $this->sortMapping[$key] : current($this->qb->getRootAliases()) . '.' . $key;
+
+			$this->qb->addOrderBy($column, $value);
+		}
+	}
+
+
+	/**
+	 * @param mixed $column
+	 * @param array $conditions
+	 * @param int $limit
+	 * @return array
+	 * @throws Exception
+	 */
+	public function suggest($column, array $conditions, int $limit): array
+	{
+		$qb = clone $this->qb;
+		$qb->setMaxResults($limit);
+
+		if (is_string($column)) {
+			$mapping = isset($this->filterMapping[$column]) ? $this->filterMapping[$column] : current($qb->getRootAliases()) . '.' . $column;
+
+			$qb->select($mapping)->distinct()->orderBy($mapping);
+		}
+
+		foreach ($conditions as $condition) {
+			$this->makeWhere($condition, $qb);
+		}
+
+		$items = [];
+		$data = $qb->getQuery()->getScalarResult();
+		foreach ($data as $row) {
+			if (is_string($column)) {
+				$value = (string) current($row);
+			} elseif (is_callable($column)) {
+				$value = (string) $column($row);
+			} else {
+				$type = gettype($column);
+				throw new Exception("Column of suggestion must be string or callback, $type given.");
+			}
+
+			$items[$value] = \Latte\Runtime\Filters::escapeHtml($value);
+		}
+
+		is_callable($column) && sort($items);
+		return array_values($items);
+	}
+
+
 }
