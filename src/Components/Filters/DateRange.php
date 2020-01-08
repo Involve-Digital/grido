@@ -89,13 +89,17 @@ class DateRange extends Date
      */
     public function __getCondition($value)
     {
+		if ($value === '' || $value === NULL) {
+            return FALSE; //skip
+        }
+
         if ($this->where === NULL && is_string($this->condition)) {
 
             list (, $from, $to) = \Nette\Utils\Strings::match($value, $this->mask);
             $from = \DateTime::createFromFormat($this->dateFormatInput, trim($from));
             $to = \DateTime::createFromFormat($this->dateFormatInput, trim($to));
 
-            if ($to && !Strings::match($this->dateFormatInput, '/G|H/i')) { //input format haven't got hour option
+			if ($to && !Strings::match($this->dateFormatInput, '/G|H/i')) { //input format haven't got hour option
                 Strings::contains($this->dateFormatOutput[1], 'G') || Strings::contains($this->dateFormatOutput[1], 'H')
                     ? $to->setTime(23, 59, 59)
                     : $to->setTime(11, 59, 59);
@@ -105,7 +109,7 @@ class DateRange extends Date
                 ? [$from->format($this->dateFormatOutput[0]), $to->format($this->dateFormatOutput[1])]
                 : NULL;
 
-            return $values
+			return $values
                 ? Condition::setup($this->getColumn(), $this->condition, $values)
                 : Condition::setupEmpty();
         }

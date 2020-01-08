@@ -92,6 +92,10 @@ class Date extends Text
      */
     public function __getCondition($value)
     {
+		if ($value === '' || $value === NULL) {
+            return FALSE; //skip
+        }
+
         $condition = $this->condition;
         if ($this->where === NULL && is_string($condition)) {
             $column = $this->getColumn();
