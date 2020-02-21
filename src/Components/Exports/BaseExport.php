@@ -31,7 +31,7 @@ abstract class BaseExport extends Component implements IResponse
 	/** @var callable */
 	protected $customData;
 
-	/** @var string */
+	/** @var ?string */
 	private $title;
 
 	/** @var ?string */
@@ -71,7 +71,7 @@ abstract class BaseExport extends Component implements IResponse
 	}
 
 
-	public function getTitle(): string
+	public function getTitle(): ?string
 	{
 		return $this->title;
 	}

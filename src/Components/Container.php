@@ -100,7 +100,7 @@ abstract class Container extends \Nette\Application\UI\Control
      * @param bool $need
      * @return ?BaseExport[]
      */
-    public function getExports(bool $need = true): ?array
+    public function getExports(bool $need = true)//: ?array
     {
         $export = $this->getComponent(BaseExport::ID, $need);
         if ($export) {
