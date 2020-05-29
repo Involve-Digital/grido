@@ -119,6 +119,16 @@ abstract class BaseExport extends Component implements IResponse
 	 */
 	public function handleExport(): void
 	{
+		// need to handle too much data to be exported in PDF already here
+		// before pdf headers are sent and memory exceeds as well
+		if ($this instanceof PdfExport) {
+			$dataCount = $datasource = $this->grid->getData(false, false, false)->getCount();
+			$maxDataCount4pdf = 5000; // bulgarian constant
+			if ($dataCount > $maxDataCount4pdf) {
+				$this->grid->presenter->flashMessage('Zvolené dáta na PDF export sú príliš veľké. Zvoľte prosím menej dát použitím filtra alebo zvoľte iný typ exportu (napr. CSV).', 'error');
+				$this->redirect('this');
+			}
+		}
 		!empty($this->grid->onRegistered) && $this->grid->onRegistered($this->grid);
 		$this->grid->presenter->sendResponse($this);
 	}
