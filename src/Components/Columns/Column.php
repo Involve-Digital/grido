@@ -72,6 +72,10 @@ abstract class Column extends \Grido\Components\Component
     /** @var array of arrays('pattern' => 'replacement') */
     protected $replacements = [];
 
+    /** @var bool */
+    protected $translateReplacements = TRUE;
+
+
     /**
      * @param \Grido\Grid $grid
      * @param string $name
@@ -97,11 +101,13 @@ abstract class Column extends \Grido\Components\Component
 
     /**
      * @param array $replacement array('pattern' => 'replacement')
+     * @param bool $translate
      * @return Column
      */
-    public function setReplacement(array $replacement)
+    public function setReplacement(array $replacement, bool $translate = TRUE)
     {
         $this->replacements = $this->replacements + $replacement;
+		$this->translateReplacements = $translate;
         return $this;
     }
 
@@ -338,7 +344,7 @@ abstract class Column extends \Grido\Components\Component
     {
         if ((is_scalar($value) || $value === NULL) && isset($this->replacements[$value])) {
             $replaced = $this->replacements[$value];
-            if (is_scalar($replaced)) {
+            if (is_scalar($replaced) && $this->translateReplacements) {
                 $replaced = $this->translate($replaced);
             }
 
