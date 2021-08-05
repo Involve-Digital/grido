@@ -48,6 +48,7 @@ class CsvExport extends BaseExport
 
 				$print($row);
 			}
+			unset($row);
 		}
 	}
 

@@ -43,6 +43,7 @@ class PdfExport extends BaseExport
 				}
 				$formattedData[] = $row;
 			}
+			unset($row);
 		}
 
 		// Tip: In template to make a new page use <pagebreak>

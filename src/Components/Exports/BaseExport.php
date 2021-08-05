@@ -23,7 +23,7 @@ abstract class BaseExport extends Component implements IResponse
 
 
 	/** @var int */
-	protected $fetchLimit = 100000;
+	protected $fetchLimit = 10000;
 
 	/** @var array */
 	protected $header = [];
@@ -138,6 +138,7 @@ abstract class BaseExport extends Component implements IResponse
 
 	public function send(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse): void
 	{
+		set_time_limit(0);
 		$label = $this->label ? ucfirst(Strings::webalize($this->label)) : ucfirst($this->grid->name);
 
 		$this->setHttpHeaders($httpResponse, $this->filename ?: $label);
