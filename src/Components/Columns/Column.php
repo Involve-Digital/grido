@@ -314,7 +314,7 @@ abstract class Column extends \Grido\Components\Component
         }
 
         $value = $this->getValue($row);
-        return strip_tags($this->applyReplacement($value));
+        return strip_tags((string) $this->applyReplacement($value));
     }
 
     /**
@@ -342,8 +342,8 @@ abstract class Column extends \Grido\Components\Component
      */
     protected function applyReplacement($value)
     {
-        if ((is_scalar($value) || $value === NULL) && isset($this->replacements[$value])) {
-            $replaced = $this->replacements[$value];
+        if ((is_scalar($value) || $value === NULL) && isset($this->replacements[(string) $value])) {
+            $replaced = $this->replacements[(string) $value];
             if (is_scalar($replaced) && $this->translateReplacements) {
                 $replaced = $this->translate($replaced);
             }
