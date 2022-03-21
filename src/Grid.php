@@ -590,7 +590,10 @@ class Grid extends Components\Container
 	public function getPropertyAccessor(): PropertyAccessor
 	{
 		if ($this->propertyAccessor === null) {
-			$this->propertyAccessor = new PropertyAccessor(true, true);
+			$this->propertyAccessor = new PropertyAccessor(
+				PropertyAccessor::MAGIC_CALL | PropertyAccessor::MAGIC_GET | PropertyAccessor::MAGIC_SET,
+				PropertyAccessor::THROW_ON_INVALID_INDEX | PropertyAccessor::THROW_ON_INVALID_PROPERTY_PATH
+			);
 		}
 
 		return $this->propertyAccessor;
