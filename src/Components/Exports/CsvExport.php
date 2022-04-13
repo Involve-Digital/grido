@@ -10,17 +10,35 @@ class CsvExport extends BaseExport
 	/** @deprecated */
 	const CSV_ID = 'csv';
 
+	/** @type string */
+	const NEW_LINE = "\n";
+	const DELIMITER = "\t"; // tabulator (in UTF-16LE only) enables MS Excel to automatically format data into columns (comma nor ; does not) https://gitlab.com/Ciki/uiad/-/issues/575
+
+
+	/** @var string */
+	private $delimiter;
+
+
+	public function __construct(string $label = null, string $filename = null, array $options = [])
+	{
+		$options['encoding'] ??= self::ENCODING_UTF16LE;
+		parent::__construct($label, $filename, $options);
+		$this->delimiter = $options['delimiter'] ?? self::DELIMITER;
+	}
+
 
 	protected function printData(): void
 	{
-		$escape = function($value) {
-			return $value !== null && (preg_match("~[\"\n,;\t]~", $value) || $value === "")
-                ? '"' . str_replace('"', '""', $value) . '"'
-                : $value;
+		$escape = function ($value) {
+			return preg_match("~[\"\n,;\t]~", $value) || $value === "" ? '"' . str_replace('"', '""', $value) . '"' : $value;
 		};
 
-		$print = function(array $row) {
-			print implode(',', $row) . "\n";
+		$print = function (array $row) {
+			$source = implode($this->delimiter, $row) . self::NEW_LINE;
+			if ($this->encoding !== mb_internal_encoding()) {
+				$source = mb_convert_encoding($source, $this->encoding, mb_internal_encoding());
+			}
+			print $source;
 		};
 
 		$columns = $this->grid[Column::ID]->getComponents();
@@ -30,7 +48,6 @@ class CsvExport extends BaseExport
 		foreach ($headerItems as $column) {
 			$header[] = $this->header ? $escape($column) : $escape($column->getLabel());
 		}
-
 		$print($header);
 
 		$datasource = $this->grid->getData(false, false, false);
@@ -57,9 +74,8 @@ class CsvExport extends BaseExport
 
 	protected function setHttpHeaders(IResponse $httpResponse, string $label): void
 	{
-		$encoding = 'utf-8';
-		$httpResponse->setHeader('Content-Encoding', $encoding);
-		$httpResponse->setHeader('Content-Type', "text/csv; charset=$encoding");
+		$httpResponse->setHeader('Content-Encoding', $this->encoding);
+		$httpResponse->setHeader('Content-Type', "text/csv; charset=$this->encoding");
 		$httpResponse->setHeader('Content-Disposition', "attachment; filename=\"$label.csv\"");
 	}
 

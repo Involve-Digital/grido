@@ -6,6 +6,7 @@ use Grido\Components\Component;
 use Grido\Grid;
 use Nette\Application\IResponse;
 use Nette\Utils\Strings;
+use OutOfRangeException;
 
 /**
  * Exporting data.
@@ -20,6 +21,10 @@ use Nette\Utils\Strings;
 abstract class BaseExport extends Component implements IResponse
 {
 	const ID = 'export';
+
+	/** @type string */
+	const ENCODING_UTF8 = 'UTF-8';
+	const ENCODING_UTF16LE = 'UTF-16LE';
 
 
 	/** @var int */
@@ -40,12 +45,24 @@ abstract class BaseExport extends Component implements IResponse
 	/** @var array */
 	protected $options;
 
+	/** @var string */
+	protected $encoding;
+
 
 	public function __construct(string $label = null, string $filename = null, array $options = [])
 	{
+		$allowedEncoding = [
+			self::ENCODING_UTF8,
+			self::ENCODING_UTF16LE,
+		];
+		if (isset($options['encoding']) && !in_array($options['encoding'], $allowedEncoding, true)) {
+			throw new OutOfRangeException("Encoding option must be one of " . join(',', $allowedEncoding));
+		}
+
 		$this->label = $label;
 		$this->filename = $filename;
 		$this->options = $options;
+		$this->encoding = $options['encoding'] ?? self::ENCODING_UTF8;
 
 		$this->monitor('Grido\Grid');
 	}
@@ -143,7 +160,19 @@ abstract class BaseExport extends Component implements IResponse
 
 		$this->setHttpHeaders($httpResponse, $this->filename ?: $label);
 
-		print chr(0xEF) . chr(0xBB) . chr(0xBF); //UTF-8 BOM
+		switch ($this->encoding) {
+			case self::ENCODING_UTF8:
+				print chr(0xEF) . chr(0xBB) . chr(0xBF); // BOM
+				break;
+
+			case self::ENCODING_UTF16LE:
+				print chr(0xFF) . chr(0xFE); // BOM
+				break;
+
+			default:
+				throw new OutOfRangeException("Encoding $this->encoding is not supported!");
+				break;
+		}
 		$this->printData();
 	}
 
