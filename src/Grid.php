@@ -798,11 +798,14 @@ class Grid extends Components\Container
 	/**
 	 * @internal
 	 */
-	public function createTemplate(): \Nette\Application\UI\ITemplate
+	public function createTemplate(): \Nette\Application\UI\Template
 	{
 		$template = parent::createTemplate();
 		$template->setFile($this->getCustomization()->getTemplateFiles()[Customization::TEMPLATE_DEFAULT]);
-		$template->getLatte()->addFilter('translate', [$this->getTranslator(), 'translate']);
+		$latte = $template->getLatte();
+		$latte->addExtension(new \Latte\Essential\TranslatorExtension($this->getTranslator()));
+		$latte->addExtension(new \Latte\Essential\RawPhpExtension);
+
 
 		return $template;
 	}
