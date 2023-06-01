@@ -41,10 +41,10 @@ class Select extends Filter
     }
 
     /**
-     * @return \Ciki\Forms\Controls\SelectBox
+     * @return Nette\Forms\Controls\SelectBox
      */
     protected function getFormControl()
     {
-        return $this->multiple ? new \Ciki\Forms\Controls\MultiSelectBox($this->label) : new \Ciki\Forms\Controls\SelectBox($this->label);
+        return $this->multiple ? new Nette\Forms\Controls\MultiSelectBox($this->label) : new Nette\Forms\Controls\SelectBox($this->label);
     }
 }
