@@ -124,7 +124,7 @@ class ArraySource implements IDataSource
 	/**
 	 * @return int
 	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return count($this->data);
 	}
@@ -133,7 +133,7 @@ class ArraySource implements IDataSource
 	/**
 	 * @return array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->data;
 	}
@@ -142,7 +142,7 @@ class ArraySource implements IDataSource
 	/**
 	 * @param array $conditions
 	 */
-	public function filter(array $conditions)
+	public function filter(array $conditions): void
 	{
 		foreach ($conditions as $condition) {
 			$this->data = $this->makeWhere($condition);
@@ -154,7 +154,7 @@ class ArraySource implements IDataSource
 	 * @param int $offset
 	 * @param int $limit
 	 */
-	public function limit($offset, $limit)
+	public function limit($offset, $limit): void
 	{
 		$this->data = array_slice($this->data, $offset, $limit);
 	}
@@ -164,7 +164,7 @@ class ArraySource implements IDataSource
 	 * @param array $sorting
 	 * @throws Exception
 	 */
-	public function sort(array $sorting)
+	public function sort(array $sorting): void
 	{
 		if (count($sorting) > 1) {
 			throw new Exception('Multi-column sorting is not implemented yet.');
@@ -200,7 +200,7 @@ class ArraySource implements IDataSource
 	 * @return array
 	 * @throws Exception
 	 */
-	public function suggest($column, array $conditions, $limit)
+	public function suggest($column, array $conditions, $limit): array
 	{
 		$data = $this->data;
 		foreach ($conditions as $condition) {
