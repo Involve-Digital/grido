@@ -535,7 +535,7 @@ class Grid extends Components\Container
 	}
 
 
-	public function getModel(): DataSources\IDataSource
+	public function getModel(): DataSources\IDataSource|DataSources\Model
 	{
 		return $this->model;
 	}
