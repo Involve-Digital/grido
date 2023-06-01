@@ -71,7 +71,7 @@ class Customization
 	}
 
 
-	public function getButtonClass(): string
+	public function getButtonClass(): ?string
 	{
 		return is_array($this->buttonClass) ? implode(' ', $this->buttonClass) : $this->buttonClass;
 	}
