@@ -798,9 +798,9 @@ class Grid extends Components\Container
 	/**
 	 * @internal
 	 */
-	public function createTemplate(): \Nette\Application\UI\Template
+	public function createTemplate(?string $class = null): \Nette\Application\UI\Template
 	{
-		$template = parent::createTemplate();
+		$template = parent::createTemplate($class);
 		$template->setFile($this->getCustomization()->getTemplateFiles()[Customization::TEMPLATE_DEFAULT]);
 		$latte = $template->getLatte();
 		$latte->addExtension(new \Latte\Essential\TranslatorExtension($this->getTranslator()));
