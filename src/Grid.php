@@ -288,7 +288,7 @@ class Grid extends Components\Container
 	 * @param string $sectionName
 	 * @return Grid
 	 */
-	public function setRememberState(bool $state = true, string $sectionName = null): Grid
+	public function setRememberState(bool $state = true, ?string $sectionName = null): Grid
 	{
 		$this->getPresenter(); //component must be attached to presenter
 		$this->getRememberSession(true); //start session if not
