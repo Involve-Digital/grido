@@ -317,7 +317,7 @@ abstract class Container extends \Nette\Application\UI\Control
     /**
      * @deprecated
      */
-    public function setExport(string $label = null): CsvExport
+    public function setExport(?string $label = null): CsvExport
     {
         trigger_error(__METHOD__ . '() is deprecated; use addExport instead.', E_USER_DEPRECATED);
         return $this->addExport(new CsvExport($label), CsvExport::CSV_ID);
@@ -343,7 +343,7 @@ abstract class Container extends \Nette\Application\UI\Control
      * @param array $arguments - second param for method $presenter->link()
      * @return Button
      */
-    public function addButton(string $name, string $label = null, string $destination = null, array $arguments = []): Button
+    public function addButton(string $name, ?string $label = null, ?string $destination = null, array $arguments = []): Button
     {
         return new Button($this, $name, $label, $destination, $arguments);
     }
@@ -354,7 +354,7 @@ abstract class Container extends \Nette\Application\UI\Control
      * @param callback $callback function($id, $newValue, $oldValue, Editable $column) {}
      * @return Grid
      */
-    public function setEditableColumns(callable $callback = null)
+    public function setEditableColumns(?callable $callback = null)
     {
         $this->onRender[] = function(Grid $grid) use ($callback) {
             if (!$grid->hasColumns()) {
