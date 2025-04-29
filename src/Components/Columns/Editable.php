@@ -54,7 +54,7 @@ abstract class Editable extends Column
      * @param \Nette\Forms\IControl $control
      * @return Editable
      */
-    public function setEditable($callback = NULL, \Nette\Forms\IControl $control = NULL)
+    public function setEditable($callback = NULL, ?\Nette\Forms\IControl $control = NULL)
     {
         $this->editable = TRUE;
         $this->setClientSideOptions();

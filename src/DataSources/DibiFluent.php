@@ -65,7 +65,7 @@ class DibiFluent implements IDataSource
 	}
 
 
-	protected function makeWhere(Condition $condition, \Dibi\Fluent $fluent = null)
+	protected function makeWhere(Condition $condition, ?\Dibi\Fluent $fluent = null)
 	{
 		$fluent = $fluent === null ? $this->fluent : $fluent;
 

@@ -55,7 +55,7 @@ class NetteDatabase implements IDataSource
 	 * @param Condition $condition
 	 * @param \Nette\Database\Table\Selection $selection
 	 */
-	protected function makeWhere(Condition $condition, \Nette\Database\Table\Selection $selection = NULL): void
+	protected function makeWhere(Condition $condition, ?\Nette\Database\Table\Selection $selection = NULL): void
 	{
 		$selection = $selection === NULL ? $this->selection : $selection;
 

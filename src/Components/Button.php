@@ -51,7 +51,7 @@ class Button extends Component
 	 * @param string $destination - first param for method $presenter->link()
 	 * @param array $arguments - second param for method $presenter->link()
 	 */
-	public function __construct(Grid $grid, string $name, string $label = NULL, string $destination = NULL, array $arguments = [])
+	public function __construct(Grid $grid, string $name, ?string $label = NULL, ?string $destination = NULL, array $arguments = [])
 	{
 		$this->label = $label;
 		$this->destination = $destination;

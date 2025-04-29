@@ -61,7 +61,7 @@ class Doctrine implements IDataSource
 	 * @param array $filterMapping Maps columns to the DQL columns
 	 * @param array $sortMapping Maps columns to the DQL columns
 	 */
-	public function __construct(\Doctrine\ORM\QueryBuilder $qb, array $filterMapping = null, array $sortMapping = null)
+	public function __construct(\Doctrine\ORM\QueryBuilder $qb, ?array $filterMapping = null, ?array $sortMapping = null)
 	{
 		$this->qb = $qb;
 		$this->filterMapping = $filterMapping;
@@ -111,7 +111,7 @@ class Doctrine implements IDataSource
 	}
 
 
-	protected function makeWhere(Condition $condition, \Doctrine\ORM\QueryBuilder $qb = null)
+	protected function makeWhere(Condition $condition, ?\Doctrine\ORM\QueryBuilder $qb = null)
 	{
 		$qb = $qb === null ? $this->qb : $qb;
 

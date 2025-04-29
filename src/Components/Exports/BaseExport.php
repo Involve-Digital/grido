@@ -49,7 +49,7 @@ abstract class BaseExport extends Component implements IResponse
 	protected $encoding;
 
 
-	public function __construct(string $label = null, string $filename = null, array $options = [])
+	public function __construct(?string $label = null, ?string $filename = null, array $options = [])
 	{
 		$allowedEncoding = [
 			self::ENCODING_UTF8,

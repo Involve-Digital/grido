@@ -46,7 +46,7 @@ class ArraySource implements IDataSource
 	 * @param array $data
 	 * @return array
 	 */
-	protected function makeWhere(Condition $condition, array $data = NULL): array
+	protected function makeWhere(Condition $condition, ?array $data = NULL): array
 	{
 		$data = $data === NULL ? $this->data : $data;
 

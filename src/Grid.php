@@ -411,7 +411,7 @@ class Grid extends Components\Container
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function getActualFilter(string $key = null)
+	public function getActualFilter(?string $key = null)
 	{
 		$filter = $this->filter ? $this->filter : $this->defaultFilter;
 		return $key !== null && isset($filter[$key]) ? $filter[$key] : $filter;

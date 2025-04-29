@@ -79,7 +79,7 @@ abstract class Container extends \Nette\Application\UI\Control
     }
 
 
-    public function getExport(string $name = null, bool $need = true): ?BaseExport
+    public function getExport(?string $name = null, bool $need = true): ?BaseExport
     {
         if (is_bool($name) || $name === null) { // deprecated
             trigger_error('This usage of ' . __METHOD__ . '() is deprecated,
@@ -238,13 +238,13 @@ abstract class Container extends \Nette\Application\UI\Control
     }
 
 
-	public function addColumnDate(string $name, string $label, string $dateFormat = null): Columns\Date
+	public function addColumnDate(string $name, string $label, ?string $dateFormat = null): Columns\Date
     {
         return new Columns\Date($this, $name, $label, $dateFormat);
     }
 
 
-    public function addColumnNumber(string $name, string $label, int $decimals = null, string $decPoint = null, string $thousandsSep = null): Columns\Number
+    public function addColumnNumber(string $name, string $label, ?int $decimals = null, ?string $decPoint = null, ?string $thousandsSep = null): Columns\Number
     {
         return new Columns\Number($this, $name, $label, $decimals, $decPoint, $thousandsSep);
     }
@@ -276,7 +276,7 @@ abstract class Container extends \Nette\Application\UI\Control
     }
 
 
-	public function addFilterSelect(string $name, string $label, array $items = null, bool $multiple = false): Filters\Select
+	public function addFilterSelect(string $name, string $label, ?array $items = null, bool $multiple = false): Filters\Select
     {
         return new Filters\Select($this, $name, $label, $items, $multiple);
     }
@@ -295,13 +295,13 @@ abstract class Container extends \Nette\Application\UI\Control
 
     /**********************************************************************************************/
 
-    public function addActionHref(string $name, string $label, string $destination = null, array $arguments = []): Actions\Href
+    public function addActionHref(string $name, string $label, ?string $destination = null, array $arguments = []): Actions\Href
     {
         return new Actions\Href($this, $name, $label, $destination, $arguments);
     }
 
 
-    public function addActionEvent(string $name, string $label, callable $onClick = null): Actions\Event
+    public function addActionEvent(string $name, string $label, ?callable $onClick = null): Actions\Event
     {
         return new Actions\Event($this, $name, $label, $onClick);
     }

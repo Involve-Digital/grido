@@ -30,7 +30,7 @@ class Select extends Filter
      * @param array $items for select
      * @param bool $multiple
      */
-    public function __construct($grid, $name, $label, array $items = NULL, /*bool */$multiple = false)
+    public function __construct($grid, $name, $label, ?array $items = NULL, /*bool */$multiple = false)
     {
 		$this->multiple = $multiple;
         parent::__construct($grid, $name, $label);

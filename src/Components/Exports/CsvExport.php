@@ -19,7 +19,7 @@ class CsvExport extends BaseExport
 	private $delimiter;
 
 
-	public function __construct(string $label = null, string $filename = null, array $options = [])
+	public function __construct(?string $label = null, ?string $filename = null, array $options = [])
 	{
 		$options['encoding'] ??= self::ENCODING_UTF16LE;
 		parent::__construct($label, $filename, $options);

@@ -30,7 +30,7 @@ function id($val)
     return $val;
 }
 
-function before(\Closure $function = NULL)
+function before(?\Closure $function = NULL)
 {
     static $val;
     if (!func_num_args()) {
